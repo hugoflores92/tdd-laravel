@@ -1,0 +1,73 @@
+version: '3'
+
+services:
+  ubuntu:
+    build: ./packages/ubuntu
+    ports:
+      - "${UBUNTU_SSH_PORT}:22"
+    tty: true
+    volumes:
+      - ${CODE}:/var/www
+
+  php:
+    build: ./packages/php-fpm
+    environment:
+      XDEBUG_CONFIG: remote_host=${DOCKERHOST_IP}
+    volumes:
+      - ${PHP_XDEBUG_LOG_PATH}:/var/log/xdebug
+      - ${CODE}:/var/www
+
+  nginx:
+    build: ./packages/nginx
+    ports:
+      - "${NGINX_HTTP_PORT}:80"
+      - "${NGINX_HTTPS_PORT}:443"
+    depends_on:
+      - php
+    volumes:
+      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+      - ${NGINX_LOG_PATH}:/var/log/nginx
+      - ${CODE}:/var/www
+
+  # apache:
+  #   image: webdevops/apache:alpine
+  #   ports:
+  #     - "${APACHE_HTTP_PORT}:80"
+  #     - "${APACHE_HTTPS_PORT}:443"
+  #   environment:
+  #     WEB_DOCUMENT_ROOT: ${APACHE_WEB_DOCUMENT_ROOT}
+  #     WEB_DOCUMENT_INDEX: index.php
+  #     WEB_PHP_SOCKET: php:9000
+  #     working_dir: /var/www
+  #   depends_on:
+  #     - php
+  #   volumes:
+  #     - ${CODE}:/var/www
+
+  mariadb:
+    image: mariadb:10
+    ports:
+      - "${MARIADB_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: ${MARIADB_DEFAULT_DATABASE}
+      MYSQL_USER: ${MARIADB_DEFAULT_USER}
+      MYSQL_PASSWORD: ${MARIADB_DEFAULT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      # - ${MARIADB_SCRIPTS_PATH}:/docker-entrypoint-initdb.d
+      - db:/var/lib/mysql
+      
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    depends_on:
+      - mariadb
+    ports:
+      - "${PHPMYADMIN_HTTP_PORT}:80"
+    environment:
+      MYSQL_USER: ${MARIADB_DEFAULT_USER}
+      MYSQL_PASSWORD: ${MARIADB_DEFAULT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      PMA_ARBITRARY: 1
+
+volumes:
+  db:
