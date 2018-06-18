@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Transaction;
+use App\Category;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -12,6 +13,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ViewTransactionsTest extends TestCase{
     use DatabaseMigrations;
 
+    const BASE_URL = '/transactions';
+
     /**
      * @test
      * @return void
@@ -19,7 +22,26 @@ class ViewTransactionsTest extends TestCase{
     public function it_can_display_all_transactions(){
         $transaction = factory(Transaction::class)->create();
 
-        $this->get('/transactions')
-            ->assertSee($transaction->description);
+        $this->get(self::BASE_URL)
+            ->assertSee($transaction->description)
+            ->assertSee($transaction->category->name);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_filter_transactions_by_category(){
+        $category = factory(Category::class)->create();
+        $transaction = factory(Transaction::class)->create([
+            'category_id' => $category->id
+        ]);
+        $otherTransaction = factory(Transaction::class)->create();
+        
+        $targetUrl = self::BASE_URL . "/{$category->slug}";
+
+        $this->get($targetUrl)
+            ->assertSee($transaction->description)
+            ->assertDontSee($otherTransaction->description);
     }
 }
