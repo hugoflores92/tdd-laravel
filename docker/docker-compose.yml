@@ -2,7 +2,10 @@ version: '3'
 
 services:
   ubuntu:
-    build: ./packages/ubuntu
+    build:
+      context: ./packages/ubuntu
+      args:
+        - UBUNTU_USERNAME=${UBUNTU_USERNAME}
     ports:
       - "${UBUNTU_SSH_PORT}:22"
     tty: true
@@ -10,7 +13,10 @@ services:
       - ${CODE}:/var/www
 
   php:
-    build: ./packages/php-fpm
+    build:
+      context: ./packages/php-fpm
+      args:
+        - PHP_UPSTREAM_PORT=${PHP_UPSTREAM_PORT}
     environment:
       XDEBUG_CONFIG: remote_host=${DOCKERHOST_IP}
     volumes:

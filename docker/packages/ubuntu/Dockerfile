@@ -4,7 +4,6 @@ FROM ubuntu:xenial
 USER root
 
 ARG UBUNTU_USERNAME=default
-ENV UBUNTU_USERNAME ${UBUNTU_USERNAME}
 
 RUN groupadd -g 1000 ${UBUNTU_USERNAME} \
     && useradd -u 1000 -g ${UBUNTU_USERNAME} -m ${UBUNTU_USERNAME}
