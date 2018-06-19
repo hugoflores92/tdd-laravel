@@ -34,4 +34,9 @@ class TransactionsController extends Controller{
         Transaction::create(request()->all());
         return redirect('/transactions');
     }
+
+    public function update(Transaction $transaction){
+        $transaction->update(request()->all());
+        return redirect('/transactions');
+    }
 }
