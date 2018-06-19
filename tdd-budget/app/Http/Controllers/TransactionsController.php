@@ -15,15 +15,16 @@ class TransactionsController extends Controller{
     }
     
     public function index(Category $category){
-        $transactions = Transaction::byCategory($category)->get();
+        $transactions = Transaction::byCategory($category)->paginate();
         
         return view('transactions.index', compact('transactions'));
     }
 
     public function create(){
         $categories = Category::all();
+        $transaction = new Transaction;
 
-        return view('transactions.create', compact('categories'));
+        return view('transactions.create', compact('categories', 'transaction'));
     }
 
     public function store(Request $request){
@@ -34,11 +35,21 @@ class TransactionsController extends Controller{
         return redirect(route(self::TRANSACTIONS_INDEX_NAMED_ROUTE));
     }
 
+    public function edit(Transaction $transaction){
+        $categories = Category::all();
+        return view('transactions.edit', compact('transaction', 'categories'));
+    }
+
     public function update(Request $request, Transaction $transaction){
         $attributes = $request->all();
 
         Transaction::validate($attributes);
         $transaction->update($attributes);
+        return redirect(route(self::TRANSACTIONS_INDEX_NAMED_ROUTE));
+    }
+
+    public function destroy(Transaction $transaction){
+        $transaction->delete();
         return redirect(route(self::TRANSACTIONS_INDEX_NAMED_ROUTE));
     }
 }

@@ -18,8 +18,10 @@ Route::get('/', function () {
 Route::get('/transactions/create', TransactionsController::class . "@create");
 Route::get('/transactions/{category?}', TransactionsController::class . "@index")
     ->name('transactions.index');
+Route::get('/transactions/{transaction}', TransactionsController::class . "@edit");
 Route::post('/transactions', TransactionsController::class . "@store");
 Route::put('/transactions/{transaction}', TransactionsController::class . "@update");
+Route::delete('/transactions/{transaction}', TransactionsController::class . "@destroy");
 
 Auth::routes();
 
