@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class Transaction extends Model
 {
@@ -30,6 +32,20 @@ class Transaction extends Model
     public function scopeByCategory($query, Category $category){
         if ($category->exists){
             $query->where('category_id', $category->id);
+        }
+    }
+
+    public static function validate(array $attributes = []){
+        $rules = [
+            'description' => 'required',
+            'amount' => 'required|numeric',
+            'category_id' => 'required',
+        ];
+
+        $validator = Validator::make($attributes, $rules);
+        
+        if ($validator->fails()){
+            throw new ValidationException($validator);
         }
     }
 }

@@ -8,6 +8,8 @@ use App\Category;
 use Illuminate\Http\Request;
 
 class TransactionsController extends Controller{
+    const TRANSACTIONS_INDEX_NAMED_ROUTE = 'transactions.index';
+
     public function __construct(){
         $this->middleware('auth');
     }
@@ -24,25 +26,19 @@ class TransactionsController extends Controller{
         return view('transactions.create', compact('categories'));
     }
 
-    public function store(){
-        $this->validate(request(), [
-            'description' => 'required',
-            'category_id' => 'required',
-            'amount' => 'required|numeric'
-        ]);
+    public function store(Request $request){
+        $attributes = $request->all();
 
-        Transaction::create(request()->all());
-        return redirect('/transactions');
+        Transaction::validate($attributes);
+        Transaction::create($attributes);
+        return redirect(route(self::TRANSACTIONS_INDEX_NAMED_ROUTE));
     }
 
-    public function update(Transaction $transaction){
-        $this->validate(request(), [
-            'description' => 'required',
-            'amount' => 'required|numeric',
-            'category_id' => 'required',
-        ]);
+    public function update(Request $request, Transaction $transaction){
+        $attributes = $request->all();
 
-        $transaction->update(request()->all());
-        return redirect('/transactions');
+        Transaction::validate($attributes);
+        $transaction->update($attributes);
+        return redirect(route(self::TRANSACTIONS_INDEX_NAMED_ROUTE));
     }
 }

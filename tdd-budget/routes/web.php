@@ -16,7 +16,8 @@ Route::get('/', function () {
 });
 
 Route::get('/transactions/create', TransactionsController::class . "@create");
-Route::get('/transactions/{category?}', TransactionsController::class . "@index");
+Route::get('/transactions/{category?}', TransactionsController::class . "@index")
+    ->name('transactions.index');
 Route::post('/transactions', TransactionsController::class . "@store");
 Route::put('/transactions/{transaction}', TransactionsController::class . "@update");
 
