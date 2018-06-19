@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use App\Exceptions\Handler;
 use Exception;
+use App\User;
 
 abstract class TestCase extends BaseTestCase{
     use CreatesApplication;
@@ -17,9 +18,14 @@ abstract class TestCase extends BaseTestCase{
      */
     private $oldExceptionHandler;
 
+    protected $user;
+
     protected function setUp(){
         parent::setUp();
-        $this->disableExceptionHandling();
+
+        $this->user = factory(User::class)->create();
+        $this->signIn($this->user)
+            ->disableExceptionHandling();
     }
 
     private function disableExceptionHandling(){
@@ -30,6 +36,26 @@ abstract class TestCase extends BaseTestCase{
     protected function withExceptionHandling(){
         app()->instance(ExceptionHandler::class, $this->oldExceptionHandler);
         return $this;
+    }
+
+    protected function signIn(User $user){
+        $this->actingAs($user);
+        return $this;
+    }
+
+    protected function signOut(){
+        $this->post('/logout');
+        return $this;
+    }
+
+    protected function make(string $class, array $overrides = [], int $times = null){
+        return factory($class, $times)
+            ->make(array_merge(['user_id' => $this->user->id], $overrides));
+    }
+
+    protected function create(string $class, array $overrides = [], int $times = null){
+        return factory($class, $times)
+            ->create(array_merge(['user_id' => $this->user->id], $overrides));
     }
 }
 

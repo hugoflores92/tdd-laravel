@@ -17,7 +17,7 @@ class CreateTransactionsTest extends TestCase{
      * @return void
      */
     public function it_can_create_transactions(){
-        $transaction = factory(Transaction::class)->make();
+        $transaction = $this->make(Transaction::class);
 
         $this->post(self::BASE_URL, $transaction->toArray())
             ->assertRedirect(self::BASE_URL);
