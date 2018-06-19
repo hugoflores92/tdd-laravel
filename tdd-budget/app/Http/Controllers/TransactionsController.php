@@ -36,6 +36,12 @@ class TransactionsController extends Controller{
     }
 
     public function update(Transaction $transaction){
+        $this->validate(request(), [
+            'description' => 'required',
+            'amount' => 'required|numeric',
+            'category_id' => 'required',
+        ]);
+
         $transaction->update(request()->all());
         return redirect('/transactions');
     }
