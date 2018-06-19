@@ -10,6 +10,7 @@ UBUNTU_USERNAME=capacitacion
 
 #PHP Interpreter
 PHP_XDEBUG_LOG_PATH=./packages/logs/xdebug
+PHP_UPSTREAM_PORT=9000
 
 #NGINX web server
 NGINX_HTTP_PORT=8080
