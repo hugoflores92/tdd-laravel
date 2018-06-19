@@ -17,6 +17,10 @@ class Transaction extends Model
         static::addGlobalScope('user', function($query){
             $query->where('user_id', auth()->id());
         });
+
+        static::saving(function(self $transaction){
+            $transaction->user_id = $transaction->user_id ?: auth()->id();
+        });
     }
 
     public function category(){

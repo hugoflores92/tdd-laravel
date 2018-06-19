@@ -18,6 +18,12 @@ class TransactionsController extends Controller{
         return view('transactions.index', compact('transactions'));
     }
 
+    public function create(){
+        $categories = Category::all();
+
+        return view('transactions.create', compact('categories'));
+    }
+
     public function store(){
         $this->validate(request(), [
             'description' => 'required',

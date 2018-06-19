@@ -15,9 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/transactions/create', TransactionsController::class . "@create");
 Route::get('/transactions/{category?}', TransactionsController::class . "@index");
 Route::post('/transactions', TransactionsController::class . "@store");
-
 
 Auth::routes();
 

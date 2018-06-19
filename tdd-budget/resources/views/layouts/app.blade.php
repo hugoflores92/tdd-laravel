@@ -36,7 +36,12 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        <li>
+                            <a href="/transactions">All transactions</a>
+                        </li>
+                        <li>
+                            <a href="/transactions/create">New Transaction</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
