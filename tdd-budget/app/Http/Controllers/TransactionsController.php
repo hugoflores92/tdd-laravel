@@ -6,6 +6,7 @@ use App\Transaction;
 use App\Category;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TransactionsController extends Controller{
     const TRANSACTIONS_INDEX_NAMED_ROUTE = 'transactions.index';
@@ -14,10 +15,19 @@ class TransactionsController extends Controller{
         $this->middleware('auth');
     }
     
-    public function index(Category $category){
-        $transactions = Transaction::byCategory($category)->paginate();
+    public function index(Request $request, Category $category){
+        $transactionsQuery = Transaction::byCategory($category);
+        $currentMonth = $request->input('month') ?: Carbon::now()->format('M');
+        if ($request->has('month')){
+            $transactionsQuery->byMonth($request->input('month'));
+        }
+        else{
+            $transactionsQuery->byMonth();
+        }
+
+        $transactions = $transactionsQuery->paginate();
         
-        return view('transactions.index', compact('transactions'));
+        return view('transactions.index', compact('transactions', 'currentMonth'));
     }
 
     public function create(){

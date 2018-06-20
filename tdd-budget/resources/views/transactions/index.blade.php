@@ -3,6 +3,28 @@
 @section('content')
     <div class="container">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-10">
+                        <form method="GET" id="month-form">
+                            <select name="month" id="month" class="form-control" onchange="document.getElementById('month-form').submit()">
+                                <option value="Jan" {{ $currentMonth == 'Jan' ? 'selected="selected"' : '' }}>January</option>
+                                <option value="Feb" {{ $currentMonth == 'Feb' ? 'selected="selected"' : '' }}>February</option>
+                                <option value="Mar" {{ $currentMonth == 'Mar' ? 'selected="selected"' : '' }}>March</option>
+                                <option value="Apr" {{ $currentMonth == 'Apr' ? 'selected="selected"' : '' }}>April</option>
+                                <option value="May" {{ $currentMonth == 'May' ? 'selected="selected"' : '' }}>May</option>
+                                <option value="Jun" {{ $currentMonth == 'Jun' ? 'selected="selected"' : '' }}>June</option>
+                                <option value="Jul" {{ $currentMonth == 'Jul' ? 'selected="selected"' : '' }}>July</option>
+                                <option value="Aug" {{ $currentMonth == 'Aug' ? 'selected="selected"' : '' }}>August</option>
+                                <option value="Sep" {{ $currentMonth == 'Sep' ? 'selected="selected"' : '' }}>September</option>
+                                <option value="Oct" {{ $currentMonth == 'Oct' ? 'selected="selected"' : '' }}>October</option>
+                                <option value="Nov" {{ $currentMonth == 'Nov' ? 'selected="selected"' : '' }}>November</option>
+                                <option value="Dec" {{ $currentMonth == 'Dec' ? 'selected="selected"' : '' }}>December</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table">

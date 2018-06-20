@@ -10,6 +10,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Carbon\Carbon;
 
 class ViewTransactionsTest extends TestCase{
     use DatabaseMigrations;
@@ -71,5 +72,35 @@ class ViewTransactionsTest extends TestCase{
         $this->get($targetUrl)
             ->assertSee($transaction->description)
             ->assertDontSee($otherTransaction->description);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_filter_transactions_by_month(){
+        $currentTransaction = $this->create(Transaction::class);
+        $pastTransaction = $this->create(Transaction::class, [
+            'created_at' => Carbon::now()->subMonth(2)
+        ]);
+
+        $this->get(self::BASE_URL . '?month=' . Carbon::now()->subMonth(2)->format('M'))
+            ->assertSee($pastTransaction->description)
+            ->assertDontSee($currentTransaction->description);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function it_can_filter_transactions_by_current_month_by_default(){
+        $currentTransaction = $this->create(Transaction::class);
+        $pastTransaction = $this->create(Transaction::class, [
+            'created_at' => Carbon::now()->subMonth(2)
+        ]);
+
+        $this->get(self::BASE_URL)
+            ->assertSee($currentTransaction->description)
+            ->assertDontSee($pastTransaction->description);
     }
 }

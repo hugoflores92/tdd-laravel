@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class Transaction extends Model
 {
@@ -33,6 +34,11 @@ class Transaction extends Model
         if ($category->exists){
             $query->where('category_id', $category->id);
         }
+    }
+
+    public function scopeByMonth($query, string $month = 'this month'){
+        $query->where('created_at', '>=', Carbon::parse("first day of $month"))
+            ->where('created_at', '<=', Carbon::parse("last day of $month"));
     }
 
     public static function validate(array $attributes = []){

@@ -42,6 +42,18 @@
                         <li>
                             <a href="/transactions/create">New Transaction</a>
                         </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Categories <span class="caret"></span>
+                                <ul class="dropdown-menu" role="menu">
+                                    @foreach(\App\Category::all() as $category)
+                                        <li>
+                                            <a href="/transactions/{{ $category->slug }}">{{ $category->slug }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
